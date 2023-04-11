@@ -2,7 +2,7 @@
 
 namespace Differ\Differ;
 
-function genDiff($firstFile,  $secondFile)
+function genDiff($firstFile, $secondFile)
 {
     $firstFile = file_get_contents($firstFile);
     $firstFile = json_decode($firstFile, true);
@@ -19,7 +19,7 @@ function comparison($firstFile, $secondFile)
     $allKeys = array_values(array_unique($keys));
     sort($allKeys);
 
-    $result = array_map(function($key) use($firstFile, $secondFile) {
+    $result = array_map(function ($key) use ($firstFile, $secondFile) {
 
         if (array_key_exists($key, $firstFile) && !array_key_exists($key, $secondFile)) {
             return "- " . $key . ": " . var_export($firstFile[$key], true);
@@ -31,9 +31,9 @@ function comparison($firstFile, $secondFile)
             return "  " . $key . ": " . var_export($firstFile[$key], true);
         }
         if ($firstFile[$key] !== $secondFile[$key]) {
-            return "+ " . $key . ": " . $secondFile[$key] .
-            "\n" . "- " . $key . ": " . $firstFile[$key];;
+            return "+ " . $key . ": " . $secondFile[$key] . "\n" . "- " . $key . ": " . $firstFile[$key];
         }
-    },$allKeys);
+    }, $allKeys);
+
     return implode("\n", $result);
 }
