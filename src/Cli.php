@@ -26,5 +26,5 @@ function run()
     $firstFilePath = realpath($args['<firstFile>']);
     $secondFilePath = realpath($args['<secondFile>']);
     $diff = genDiff($firstFilePath, $secondFilePath);
-    print_r($diff);
+    print_r($diff)  ;
 }
