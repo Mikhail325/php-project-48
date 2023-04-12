@@ -1,0 +1,10 @@
+name: testGit
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run linter
+        run: make lint
+      - name: Run tests
+        run: composer exec --verbose phpunit tests
