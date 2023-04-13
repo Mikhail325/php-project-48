@@ -10,7 +10,7 @@ class GenDiffTest extends TestCase
 {
     private function getPathFile(string $nameFile): string
     {
-        return 'tests'. DIRECTORY_SEPARATOR . 'fixtures'
+        return 'tests' . DIRECTORY_SEPARATOR . 'fixtures'
         . DIRECTORY_SEPARATOR . $nameFile;
     }
 
@@ -30,5 +30,5 @@ class GenDiffTest extends TestCase
             $corectAneswe,
             genDiff($this -> getPathFile('file1.yml'), $this -> getPathFile('file2.yml'))
         );
-    }    
+    }
 }

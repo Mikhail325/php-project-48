@@ -14,11 +14,11 @@ function parserData(string $parsFile)
 
 function getParset(string $file, string $expation)
 {
-    switch($expation){
-        case('json'):
+    switch ($expation) {
+        case ('json'):
             return json_decode($file, true);
-        case('yaml'):
-        case('yml'):
+        case ('yaml'):
+        case ('yml'):
             return Yaml::parse($file);
     }
 }
