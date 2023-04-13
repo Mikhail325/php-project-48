@@ -2,13 +2,12 @@
 
 namespace Differ\Differ;
 
+use function Parsers\parserData;
+
 function genDiff($firstFile, $secondFile)
 {
-    $firstFile = file_get_contents($firstFile);
-    $firstFile = json_decode($firstFile, true);
-
-    $secondFile = file_get_contents($secondFile);
-    $secondFile = json_decode($secondFile, true);
+    $firstFile = parserData($firstFile);
+    $secondFile = parserData($secondFile);
 
     return comparison($firstFile, $secondFile);
 }

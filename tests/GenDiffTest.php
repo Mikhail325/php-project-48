@@ -8,16 +8,27 @@ use function Differ\Differ\genDiff;
 
 class GenDiffTest extends TestCase
 {
-    public function testGenDiff(): void
+    private function getPathFile(string $nameFile): string
     {
+        return 'tests'. DIRECTORY_SEPARATOR . 'fixtures'
+        . DIRECTORY_SEPARATOR . $nameFile;
+    }
+
+    public function testGenDiffJson(): void
+    {
+        $corectAneswe = file_get_contents($this -> getPathFile('corectAnswe'));
         $this->assertEquals(
-            "- follow: false
-  host: 'hexlet.io'
-- proxy: '123.234.53.22'
-+ timeout: 20
-- timeout: 50
-+ verbose: true",
-            genDiff(realpath('tests/fixtures/file1.json'), realpath('tests/fixtures/file2.json'))
+            $corectAneswe,
+            genDiff($this -> getPathFile('file1.json'), $this -> getPathFile('file2.json'))
         );
     }
+
+    public function testGenDiffYaml(): void
+    {
+        $corectAneswe = file_get_contents($this -> getPathFile('corectAnswe'));
+        $this->assertEquals(
+            $corectAneswe,
+            genDiff($this -> getPathFile('file1.yml'), $this -> getPathFile('file2.yml'))
+        );
+    }    
 }
