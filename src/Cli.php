@@ -23,8 +23,6 @@ DOC;
 function run()
 {
     $args = \Docopt::handle(DOC, array('version' => 'GenDiff 1.0'));
-    $firstFilePath = realpath($args['<firstFile>']);
-    $secondFilePath = realpath($args['<secondFile>']);
-    $diff = genDiff($args['<firstFile>'], $args['<secondFile>']);
-    print_r($diff)  ;
+    $diff = genDiff($args['<firstFile>'], $args['<secondFile>'], $args['--format']);
+    print_r($diff);
 }

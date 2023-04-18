@@ -20,5 +20,7 @@ function getParset(string $file, string $expation)
         case ('yaml'):
         case ('yml'):
             return Yaml::parse($file);
+        default:
+            throw new \Exception("unknown file format {$expation}");
     }
 }

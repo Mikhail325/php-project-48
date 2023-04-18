@@ -8,7 +8,9 @@
         "files":[
             "src/GenDiff.php",
             "src/Cli.php",
-            "src/Parsers.php"
+            "src/Parsers.php",
+            "src/format/stylish.php",
+            "src/Formatters.php"
         ]
     },
     "authors": [
