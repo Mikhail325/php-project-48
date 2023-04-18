@@ -25,10 +25,10 @@ function setComparation($firstFile, $secondFile)
         $value2 = $secondFile[$key] ?? null;
 
         if (!key_exists($key, $secondFile)) {
-            return setNode('deleted', $key, stringify($value1));;
+            return setNode('deleted', $key, stringify($value1));
         }
         if (!key_exists($key, $firstFile)) {
-            return setNode('added', $key, stringify($value2));;
+            return setNode('added', $key, stringify($value2));
         }
         if (is_array($firstFile[$key]) && is_array($secondFile[$key])) {
             return setNode('array', $key, setComparation($value1, $value2));
