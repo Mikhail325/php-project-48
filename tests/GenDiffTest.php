@@ -55,12 +55,21 @@ class GenDiffTest extends TestCase
         );
     }
 
-    public function testGenDiffPlainJson(): void
+    public function testGenDiffFormatPlain(): void
     {
         $corectAneswe = file_get_contents($this -> getCorectAnswe('corectPlain'));
         $this->assertEquals(
             $corectAneswe,
             genDiff($this -> getPathFile('file11.json'), $this -> getPathFile('file22.json'), 'plain')
+        );
+    }
+
+    public function testGenDiffFormatJson(): void
+    {
+        $corectAneswe = file_get_contents($this -> getCorectAnswe('corectJson'));
+        $this->assertEquals(
+            $corectAneswe,
+            genDiff($this -> getPathFile('file11.json'), $this -> getPathFile('file22.json'), 'json')
         );
     }
 }
