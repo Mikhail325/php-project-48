@@ -2,14 +2,17 @@
 
 namespace Formatters;
 
-use function Formatters\Stylish\outputOfChanges;
+use function Formatters\Stylish\getChangesInStylish;
+use function Formatters\Plain\getChangesInPlain;
 
-function formatSelection($data, $format)
+function formatSelection($data, $formate)
 {
-    switch ($format) {
+    switch ($formate) {
         case ('stylish'):
-            return outputOfChanges($data);
+            return getChangesInStylish($data);
+        case ('plain'):
+            return getChangesInPlain($data);
         default:
-            throw new \Exception("Unknown format {$format}");
+            throw new \Exception("Unknown format {$formate}");
     }
 }

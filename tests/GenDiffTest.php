@@ -37,21 +37,30 @@ class GenDiffTest extends TestCase
         );
     }
 
-    public function testGenDiffNestedJson(): void
+    public function testGenDiffStylishJson(): void
     {
-        $corectAneswe = file_get_contents($this -> getCorectAnswe('corectAnswerNested'));
+        $corectAneswe = file_get_contents($this -> getCorectAnswe('corectStylish'));
         $this->assertEquals(
             $corectAneswe,
             genDiff($this -> getPathFile('file11.json'), $this -> getPathFile('file22.json'))
         );
     }
 
-    public function testGenDiffNestedYaml(): void
+    public function testGenDiffStylisYaml(): void
     {
-        $corectAneswe = file_get_contents($this -> getCorectAnswe('corectAnswerNested'));
+        $corectAneswe = file_get_contents($this -> getCorectAnswe('corectStylish'));
         $this->assertEquals(
             $corectAneswe,
             genDiff($this -> getPathFile('file11.yml'), $this -> getPathFile('file22.yml'))
+        );
+    }
+
+    public function testGenDiffPlainJson(): void
+    {
+        $corectAneswe = file_get_contents($this -> getCorectAnswe('corectPlain'));
+        $this->assertEquals(
+            $corectAneswe,
+            genDiff($this -> getPathFile('file11.json'), $this -> getPathFile('file22.json'), 'plain')
         );
     }
 }

@@ -9,8 +9,9 @@
             "src/GenDiff.php",
             "src/Cli.php",
             "src/Parsers.php",
-            "src/format/stylish.php",
-            "src/Formatters.php"
+            "src/format/Stylish.php",
+            "src/Formatters.php",
+            "src/format/Plain.php"
         ]
     },
     "authors": [
