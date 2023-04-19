@@ -21,7 +21,11 @@ function getChangesInStylish(array $astTree, int $depth = 0): string
             case 'deleted':
                 return "{$indent}  - {$key}: {$normalizeValue1}";
             case 'changed':
-                $normalizeValue2 = (is_array($valueBefore)) ? getChangesInStylish($valueBefore, $depth + 1) : $valueBefore;
+                if (is_array($valueBefore)) {
+                    $normalizeValue2 = getChangesInStylish($valueBefore, $depth + 1);
+                } else {
+                    $normalizeValue2 = $valueBefore;
+                }
                 return "{$indent}  - {$key}: {$normalizeValue1}\n{$indent}  + {$key}: {$normalizeValue2}";
         }
     }, $astTree);

@@ -34,11 +34,11 @@ function outputValue($value)
 {
     if (!is_array($value)) {
         if (
-            $value === 'null' || 
-            $value === 'true' || 
-            $value === 'false' || 
+            $value === 'null' ||
+            $value === 'true' ||
+            $value === 'false' ||
             is_numeric($value)
-            ) {
+        ) {
             return $value;
         }
 
