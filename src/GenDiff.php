@@ -4,6 +4,7 @@ namespace Differ\Differ;
 
 use function Parsers\parserData;
 use function Formatters\formatSelection;
+use function Functional\sort;
 
 function genDiff(string $firstFile, string $secondFile, string $formate = 'stylish'): string
 {
@@ -18,7 +19,7 @@ function setComparation(array $firstFile, array $secondFile): array
 {
     $keys = array_merge(array_keys($firstFile), array_keys($secondFile));
     $allKeys = array_values(array_unique($keys));
-    usort($allKeys, fn($a, $b) => strcmp($a, $b));
+    $sortKey = sort($allKeys, fn($a, $b) => strcmp($a, $b));
     return array_map(function ($key) use (&$firstFile, &$secondFile) {
 
         $value1 = $firstFile[$key] ?? null;
@@ -37,7 +38,7 @@ function setComparation(array $firstFile, array $secondFile): array
             return setNode('changed', $key, stringify($value1), stringify($value2));
         }
         return setNode('unchanged', $key, $value1);
-    }, $allKeys);
+    }, $sortKey);
 }
 
 function setNode(string $status, string $key, mixed $value1, mixed $value2 = null): array
