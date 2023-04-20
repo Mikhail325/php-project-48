@@ -9,6 +9,9 @@ function parserData(string $file): array
     $parsFile = realpath($file);
     $expansion = pathinfo($parsFile, PATHINFO_EXTENSION);
     $data = file_get_contents($parsFile);
+    if ($data !== true) {
+        throw new \Exception("{$data} file not found");
+    }
     return getParset($data, $expansion);
 }
 

@@ -18,7 +18,7 @@ function setComparation(array $firstFile, array $secondFile): array
 {
     $keys = array_merge(array_keys($firstFile), array_keys($secondFile));
     $allKeys = array_values(array_unique($keys));
-    sort($allKeys); // запрешен
+    usort($allKeys, fn($a, $b) => strcmp($a, $b));
     return array_map(function ($key) use (&$firstFile, &$secondFile) {
 
         $value1 = $firstFile[$key] ?? null;
