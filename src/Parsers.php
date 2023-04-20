@@ -4,22 +4,22 @@ namespace Parsers;
 
 use Symfony\Component\Yaml\Yaml;
 
-function parserData(string $parsFile): array
+function parserData(string $file): array
 {
-    $parsFile = realpath($parsFile);
+    $parsFile = realpath($file);
     $expansion = pathinfo($parsFile, PATHINFO_EXTENSION);
     $data = file_get_contents($parsFile);
     return getParset($data, $expansion);
 }
 
-function getParset(string $file, string $expation): array
+function getParset(string $data, string $expation): array
 {
     switch ($expation) {
         case ('json'):
-            return json_decode($file, true);
+            return json_decode($data, true);
         case ('yaml'):
         case ('yml'):
-            return Yaml::parse($file);
+            return Yaml::parse($data);
         default:
             throw new \Exception("Unknown file format {$expation}");
     }

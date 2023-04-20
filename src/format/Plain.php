@@ -14,19 +14,19 @@ function getChangesInPlain(array $astTree, string $wayValue = ''): string
             case 'array':
                 return getChangesInPlain($valueAfter, $normalizeValue1);
             case 'added':
-                $valueAfter = outputValue($valueAfter);
-                return "Property '{$normalizeValue1}' was added with value: {$valueAfter}";
+                $after = outputValue($valueAfter);
+                return "Property '{$normalizeValue1}' was added with value: {$after}";
             case 'deleted':
-                $valueAfter = outputValue($valueAfter);
-                return "Property '{$normalizeValue1}' was removed";
+                $after = outputValue($valueAfter);
+                return "Property '{$after}' was removed";
             case 'changed':
-                $valueAfter = outputValue($valueAfter);
-                $valueBefore = outputValue($valueBefore);
-                return "Property '{$normalizeValue1}' was updated. From {$valueAfter} to {$valueBefore}";
+                $after = outputValue($valueAfter);
+                $before = outputValue($valueBefore);
+                return "Property '{$normalizeValue1}' was updated. From {$after} to {$before}";
         }
     }, $astTree);
-    $result = array_filter($result);
-    return implode("\n", $result);
+    $filterResult = array_filter($result);
+    return implode("\n", $filterResult);
 }
 
 

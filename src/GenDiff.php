@@ -18,7 +18,7 @@ function setComparation(array $firstFile, array $secondFile): array
 {
     $keys = array_merge(array_keys($firstFile), array_keys($secondFile));
     $allKeys = array_values(array_unique($keys));
-    sort($allKeys);
+    sort($allKeys); // запрешен
     return array_map(function ($key) use (&$firstFile, &$secondFile) {
 
         $value1 = $firstFile[$key] ?? null;
@@ -40,7 +40,7 @@ function setComparation(array $firstFile, array $secondFile): array
     }, $allKeys);
 }
 
-function setNode(string $status, string $key, $value1, $value2 = null): array
+function setNode(string $status, string $key, mixed $value1, mixed $value2 = null): array
 {
     return [
         'status' => $status,
