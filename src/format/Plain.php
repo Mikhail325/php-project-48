@@ -2,7 +2,7 @@
 
 namespace Formatters\Plain;
 
-function getChangesInPlain($astTree, $wayValue = '')
+function getChangesInPlain(array $astTree, string $wayValue = ''):string
 {
     $result = array_map(function ($node) use ($wayValue) {
 
@@ -30,7 +30,7 @@ function getChangesInPlain($astTree, $wayValue = '')
 }
 
 
-function outputValue($value)
+function outputValue(mixed $value):string
 {
     if (!is_array($value)) {
         if (

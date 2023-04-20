@@ -4,7 +4,7 @@ namespace Parsers;
 
 use Symfony\Component\Yaml\Yaml;
 
-function parserData(string $parsFile)
+function parserData(string $parsFile):array
 {
     $parsFile = realpath($parsFile);
     $expansion = pathinfo($parsFile, PATHINFO_EXTENSION);
@@ -12,7 +12,7 @@ function parserData(string $parsFile)
     return getParset($data, $expansion);
 }
 
-function getParset(string $file, string $expation)
+function getParset(string $file, string $expation):array
 {
     switch ($expation) {
         case ('json'):

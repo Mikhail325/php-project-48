@@ -6,7 +6,7 @@ use function Formatters\Stylish\getChangesInStylish;
 use function Formatters\Plain\getChangesInPlain;
 use function Formatters\Json\getChangesInJson;
 
-function formatSelection($data, $formate)
+function formatSelection(array $data, string $formate):string
 {
     switch ($formate) {
         case ('stylish'):

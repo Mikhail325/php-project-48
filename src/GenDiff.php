@@ -5,7 +5,7 @@ namespace Differ\Differ;
 use function Parsers\parserData;
 use function Formatters\formatSelection;
 
-function genDiff($firstFile, $secondFile, $formate = 'stylish')
+function genDiff(string $firstFile, string $secondFile, string $formate = 'stylish'):string
 {
     $firstFile = parserData($firstFile);
     $secondFile = parserData($secondFile);
@@ -14,7 +14,7 @@ function genDiff($firstFile, $secondFile, $formate = 'stylish')
     return formatSelection($result, $formate);
 }
 
-function setComparation($firstFile, $secondFile)
+function setComparation(array $firstFile, array $secondFile):array
 {
     $keys = array_merge(array_keys($firstFile), array_keys($secondFile));
     $allKeys = array_values(array_unique($keys));
@@ -40,13 +40,18 @@ function setComparation($firstFile, $secondFile)
     }, $allKeys);
 }
 
-function setNode(string $status, string $key, $value1, $value2 = null)
+function setNode(string $status, string $key, $value1, $value2 = null):array
 {
-    return ['status' => $status, 'key' => $key, 'valueAfter' => $value1, 'valueBefore' => $value2];
+    return [
+        'status' => $status,
+        'key' => $key,
+        'valueAfter' => $value1,
+        'valueBefore' => $value2
+    ];
 }
 
 
-function stringify($content)
+function stringify(mixed $content):mixed
 {
     $iter = function ($content) use (&$iter) {
         if (!is_array($content)) {
