@@ -7,10 +7,10 @@ use function Formatters\formatSelection;
 
 function genDiff(string $firstFile, string $secondFile, string $formate = 'stylish'): string
 {
-    $firstFile = parserData($firstFile);
-    $secondFile = parserData($secondFile);
+    $file1 = parserData($firstFile);
+    $file2 = parserData($secondFile);
 
-    $result = setComparation($firstFile, $secondFile);
+    $result = setComparation($file1, $file2);
     return formatSelection($result, $formate);
 }
 
