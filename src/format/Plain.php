@@ -17,8 +17,7 @@ function getChangesInPlain(array $astTree, string $wayValue = ''): string
                 $after = outputValue($valueAfter);
                 return "Property '{$normalizeValue1}' was added with value: {$after}";
             case 'deleted':
-                $after = outputValue($valueAfter);
-                return "Property '{$after}' was removed";
+                return "Property '{$normalizeValue1}' was removed";
             case 'changed':
                 $after = outputValue($valueAfter);
                 $before = outputValue($valueBefore);
@@ -30,7 +29,7 @@ function getChangesInPlain(array $astTree, string $wayValue = ''): string
 }
 
 
-function outputValue(mixed $value): string
+function outputValue(mixed $value): mixed
 {
     if (!is_array($value)) {
         if (
