@@ -15,7 +15,7 @@ function parserData(string $file): array
     return getParset($data, $expansion);
 }
 
-function getParset(string $data, string $expation): array
+function getParset(mixed $data, string $expation): array
 {
     switch ($expation) {
         case ('json'):
