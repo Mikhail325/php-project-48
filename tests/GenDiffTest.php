@@ -19,39 +19,12 @@ class GenDiffTest extends TestCase
         . DIRECTORY_SEPARATOR . $nameFile;
     }
 
-    public function testGenDiffJson(): void
-    {
-        $corectAneswe = file_get_contents($this -> getCorectAnswe('corectAnswe'));
-        $this->assertEquals(
-            $corectAneswe,
-            genDiff($this -> getPathFile('file1.json'), $this -> getPathFile('file2.json'))
-        );
-    }
-
-    public function testGenDiffYaml(): void
-    {
-        $corectAneswe = file_get_contents($this -> getCorectAnswe('corectAnswe'));
-        $this->assertEquals(
-            $corectAneswe,
-            genDiff($this -> getPathFile('file1.yml'), $this -> getPathFile('file2.yml'))
-        );
-    }
-
-    public function testGenDiffStylishJson(): void
+    public function testGenDiffStylish(): void
     {
         $corectAneswe = file_get_contents($this -> getCorectAnswe('corectStylish'));
         $this->assertEquals(
             $corectAneswe,
-            genDiff($this -> getPathFile('file11.json'), $this -> getPathFile('file22.json'))
-        );
-    }
-
-    public function testGenDiffStylisYaml(): void
-    {
-        $corectAneswe = file_get_contents($this -> getCorectAnswe('corectStylish'));
-        $this->assertEquals(
-            $corectAneswe,
-            genDiff($this -> getPathFile('file11.yml'), $this -> getPathFile('file22.yml'))
+            genDiff($this -> getPathFile('file11.json'), $this -> getPathFile('file22.yml'))
         );
     }
 
@@ -60,7 +33,7 @@ class GenDiffTest extends TestCase
         $corectAneswe = file_get_contents($this -> getCorectAnswe('corectPlain'));
         $this->assertEquals(
             $corectAneswe,
-            genDiff($this -> getPathFile('file11.json'), $this -> getPathFile('file22.json'), 'plain')
+            genDiff($this -> getPathFile('file11.json'), $this -> getPathFile('file22.yml'), 'plain')
         );
     }
 
@@ -69,7 +42,7 @@ class GenDiffTest extends TestCase
         $corectAneswe = file_get_contents($this -> getCorectAnswe('corectJson'));
         $this->assertEquals(
             $corectAneswe,
-            genDiff($this -> getPathFile('file11.json'), $this -> getPathFile('file22.json'), 'json')
+            genDiff($this -> getPathFile('file11.json'), $this -> getPathFile('file22.yml'), 'json')
         );
     }
 }

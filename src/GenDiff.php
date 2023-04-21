@@ -11,11 +11,11 @@ function genDiff(string $firstFile, string $secondFile, string $formate = 'styli
     $file1 = parserData($firstFile);
     $file2 = parserData($secondFile);
 
-    $result = setComparation($file1, $file2);
-    return formatSelection($result, $formate);
+    $diff = comparation($file1, $file2);
+    return formatSelection($diff, $formate);
 }
 
-function setComparation(array $firstFile, array $secondFile): array
+function comparation(array $firstFile, array $secondFile): array
 {
     $keys = array_merge(array_keys($firstFile), array_keys($secondFile));
     $allKeys = array_values(array_unique($keys));
@@ -26,16 +26,16 @@ function setComparation(array $firstFile, array $secondFile): array
         $value2 = $secondFile[$key] ?? null;
 
         if (!key_exists($key, $secondFile)) {
-            return setNode('deleted', $key, stringify($value1));
+            return setNode('deleted', $key, setString($value1));
         }
         if (!key_exists($key, $firstFile)) {
-            return setNode('added', $key, stringify($value2));
+            return setNode('added', $key, setString($value2));
         }
         if (is_array($firstFile[$key]) && is_array($secondFile[$key])) {
-            return setNode('array', $key, setComparation($value1, $value2));
+            return setNode('array', $key, comparation($value1, $value2));
         }
         if ($firstFile[$key] !== $secondFile[$key]) {
-            return setNode('changed', $key, stringify($value1), stringify($value2));
+            return setNode('changed', $key, setString($value1), setString($value2));
         }
         return setNode('unchanged', $key, $value1);
     }, $sortKey);
@@ -52,23 +52,22 @@ function setNode(string $status, string $key, mixed $value1, mixed $value2 = nul
 }
 
 
-function stringify(mixed $content): mixed
+function setString(mixed $data): mixed
 {
-    $iter = function ($content) use (&$iter) {
-        if (!is_array($content)) {
-            if ($content === null) {
+    $iter = function ($data) use (&$iter) {
+        if (!is_array($data)) {
+            if (is_null($data)) {
                 return 'null';
             }
-            return trim(var_export($content, true), "'");
+            return trim(var_export($data, true), "'");
         }
 
-        $keys = array_keys($content);
-        return array_map(function ($key) use ($content, $iter) {
-            $value = (is_array($content[$key])) ? $iter($content[$key]) : $content[$key];
-
+        $keys = array_keys($data);
+        return array_map(function ($key) use ($data, $iter) {
+            $value = (is_array($data[$key])) ? $iter($data[$key]) : $data[$key];
             return setNode('unchanged', $key, $value);
         }, $keys);
     };
 
-    return $iter($content);
+    return $iter($data);
 }

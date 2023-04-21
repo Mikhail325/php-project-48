@@ -8,7 +8,12 @@ function getChangesInStylish(array $astTree, int $depth = 0): string
 
     $lines = array_map(function ($node) use ($indent, $depth) {
 
-        ['status' => $status, 'key' => $key, 'valueAfter' => $valueAfter, 'valueBefore' => $valueBefore] = $node;
+        [
+            'status' => $status,
+            'key' => $key,
+            'valueAfter' => $valueAfter,
+            'valueBefore' => $valueBefore
+        ] = $node;
 
         $normalizeValue1 = (is_array($valueAfter)) ? getChangesInStylish($valueAfter, $depth + 1) : $valueAfter;
 

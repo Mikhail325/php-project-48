@@ -6,7 +6,12 @@ function getChangesInPlain(array $astTree, string $wayValue = ''): string
 {
     $result = array_map(function ($node) use ($wayValue) {
 
-        ['status' => $status, 'key' => $key, 'valueAfter' => $valueAfter, 'valueBefore' => $valueBefore] = $node;
+        [
+            'status' => $status,
+            'key' => $key,
+            'valueAfter' => $valueAfter,
+            'valueBefore' => $valueBefore
+        ] = $node;
 
         $normalizeValue1 = ('' === $wayValue) ? $key : "{$wayValue}.{$key}";
 
