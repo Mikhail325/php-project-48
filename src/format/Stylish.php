@@ -1,39 +1,55 @@
 <?php
 
-namespace Formatters\Stylish;
+namespace Differ\Formatters\stylish;
 
-function getChangesInStylish(array $astTree, int $depth = 0): string
+function render(array $astTree, int $depth = 0): string
 {
-    $indent = str_repeat('    ', $depth);
-
-    $lines = array_map(function ($node) use ($indent, $depth) {
-
-        [
-            'status' => $status,
-            'key' => $key,
-            'valueAfter' => $valueAfter,
-            'valueBefore' => $valueBefore
-        ] = $node;
-
-        $normalizeValue1 = (is_array($valueAfter)) ? getChangesInStylish($valueAfter, $depth + 1) : $valueAfter;
-
-        switch ($status) {
-            case 'array':
-            case 'unchanged':
-                return "{$indent}    {$key}: {$normalizeValue1}";
-            case 'added':
-                return "{$indent}  + {$key}: {$normalizeValue1}";
-            case 'deleted':
-                return "{$indent}  - {$key}: {$normalizeValue1}";
-            case 'changed':
-                if (is_array($valueBefore)) {
-                    $normalizeValue2 = getChangesInStylish($valueBefore, $depth + 1);
-                } else {
-                    $normalizeValue2 = $valueBefore;
-                }
-                return "{$indent}  - {$key}: {$normalizeValue1}\n{$indent}  + {$key}: {$normalizeValue2}";
-        }
-    }, $astTree);
+    $lines = array_map(fn ($node) => processingNode($node, $depth), $astTree);
+    $indent = indentation($depth);
     $result = ["{", ...$lines, "{$indent}}"];
     return implode("\n", $result);
+}
+
+function processingNode($node, $depth)
+{
+    [
+        'status' => $status,
+        'key' => $key,
+        'valueAfter' => $valueAfter,
+        'valueBefore' => $valueBefore
+    ] = $node;
+
+    switch ($status) {
+        case 'array':
+            return indentation($depth, ' ') . "{$key}: " . render($valueAfter, $depth + 1);
+        case 'unchanged':
+            return indentation($depth, ' ') . "{$key}: " . convertString($valueAfter, $depth);
+        case 'added':
+            return indentation($depth, '+') . "{$key}: " . convertString($valueAfter, $depth);
+        case 'deleted':
+            return indentation($depth, '-') . "{$key}: " . convertString($valueAfter, $depth);
+        case 'changed':
+            return indentation($depth, '-') . "{$key}: " . convertString($valueAfter, $depth) . "\n"
+            . indentation($depth, '+') . "{$key}: " . convertString($valueBefore, $depth);
+        default:
+            throw new \Exception("Unknown status {$status}");
+    }
+}
+
+function indentation(int $depth, string $simbol = '')
+{
+    $indent = str_repeat('    ', $depth);
+    if (!empty($simbol)) {
+        return $indent . "  {$simbol} ";
+    }
+    return $indent;
+}
+
+function convertString($value, $depth)
+{
+    if (is_array($value)) {
+        return render($value, $depth + 1);
+    } else {
+        return $value;
+    }
 }

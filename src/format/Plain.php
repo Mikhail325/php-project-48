@@ -1,40 +1,45 @@
 <?php
 
-namespace Formatters\Plain;
+namespace Differ\Formatters\plain;
 
-function getChangesInPlain(array $astTree, string $wayValue = ''): string
+function render(array $astTree, string $wayValue = ''): string
 {
-    $result = array_map(function ($node) use ($wayValue) {
-
-        [
-            'status' => $status,
-            'key' => $key,
-            'valueAfter' => $valueAfter,
-            'valueBefore' => $valueBefore
-        ] = $node;
-
-        $normalizeValue1 = ('' === $wayValue) ? $key : "{$wayValue}.{$key}";
-
-        switch ($status) {
-            case 'array':
-                return getChangesInPlain($valueAfter, $normalizeValue1);
-            case 'added':
-                $after = outputValue($valueAfter);
-                return "Property '{$normalizeValue1}' was added with value: {$after}";
-            case 'deleted':
-                return "Property '{$normalizeValue1}' was removed";
-            case 'changed':
-                $after = outputValue($valueAfter);
-                $before = outputValue($valueBefore);
-                return "Property '{$normalizeValue1}' was updated. From {$after} to {$before}";
-        }
-    }, $astTree);
+    $result = array_map(fn ($node) => processingNode($node, $wayValue), $astTree);
     $filterResult = array_filter($result);
     return implode("\n", $filterResult);
 }
 
+function processingNode($node, $wayValue)
+{
+    [
+        'status' => $status,
+        'key' => $key,
+        'valueAfter' => $valueAfter,
+        'valueBefore' => $valueBefore
+    ] = $node;
 
-function outputValue(mixed $value): mixed
+    $normalizeValue = ('' === $wayValue) ? $key : "{$wayValue}.{$key}";
+
+    switch ($status) {
+        case 'array':
+            return render($valueAfter, $normalizeValue);
+        case 'added':
+            $after = getOutputValue($valueAfter);
+            return "Property '{$normalizeValue}' was added with value: {$after}";
+        case 'deleted':
+            return "Property '{$normalizeValue}' was removed";
+        case 'changed':
+            $after = getOutputValue($valueAfter);
+            $before = getOutputValue($valueBefore);
+            return "Property '{$normalizeValue}' was updated. From {$after} to {$before}";
+        case 'unchanged':
+            return;
+        default:
+            throw new \Exception("Unknown status {$status}");
+    }
+}
+
+function getOutputValue(mixed $value): mixed
 {
     if (!is_array($value)) {
         if (

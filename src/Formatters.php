@@ -1,21 +1,15 @@
 <?php
 
-namespace Formatters;
+namespace Differ\Formatters;
 
-use function Formatters\Stylish\getChangesInStylish;
-use function Formatters\Plain\getChangesInPlain;
-use function Formatters\Json\getChangesInJson;
-
-function formatSelection(array $data, string $formate): string
+function formatSelection(array $data, string $format): string
 {
-    switch ($formate) {
-        case ('stylish'):
-            return getChangesInStylish($data);
-        case ('plain'):
-            return getChangesInPlain($data);
-        case ('json'):
-            return getChangesInJson($data);
-        default:
-            throw new \Exception("Unknown format {$formate}");
+    $corectFormate = ['stylish', 'plain', 'json'];
+
+    if (in_array($format, $corectFormate)) {
+        $render = "Differ\Formatters" . '\\' . $format . '\\' . 'render';
+        return $render($data);
     }
+
+    throw new \Exception("Unknown format {$format}");
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace Differ\Differ;
+namespace Differ;
 
-use function Parsers\parserData;
-use function Formatters\formatSelection;
+use function Differ\Parsers\parset;
+use function Differ\Formatters\formatSelection;
 use function Functional\sort;
 
 function genDiff(string $firstFile, string $secondFile, string $formate = 'stylish'): string
@@ -11,31 +11,42 @@ function genDiff(string $firstFile, string $secondFile, string $formate = 'styli
     $file1 = parserData($firstFile);
     $file2 = parserData($secondFile);
 
-    $diff = comparation($file1, $file2);
+    $diff = buildDiffTree($file1, $file2);
     return formatSelection($diff, $formate);
 }
 
-function comparation(array $firstFile, array $secondFile): array
+function parserData(string $file): array
+{
+    $parsFile = realpath($file);
+    if ($parsFile === false) {
+        throw new \Exception("File not found");
+    }
+    $expansion = pathinfo($parsFile, PATHINFO_EXTENSION);
+    $data = file_get_contents($parsFile);
+    return parset($data, $expansion);
+}
+
+function buildDiffTree(array $firstFile, array $secondFile): array
 {
     $keys = array_merge(array_keys($firstFile), array_keys($secondFile));
     $allKeys = array_values(array_unique($keys));
-    $sortKey = sort($allKeys, fn($a, $b) => strcmp($a, $b));
-    return array_map(function ($key) use (&$firstFile, &$secondFile) {
+    $sortKey = sort($allKeys, fn($left, $right) => strcmp($left, $right));
+    return array_map(function ($key) use ($firstFile, $secondFile) {
 
         $value1 = $firstFile[$key] ?? null;
         $value2 = $secondFile[$key] ?? null;
 
         if (!key_exists($key, $secondFile)) {
-            return setNode('deleted', $key, setString($value1));
+            return setNode('deleted', $key, setValue($value1));
         }
         if (!key_exists($key, $firstFile)) {
-            return setNode('added', $key, setString($value2));
+            return setNode('added', $key, setValue($value2));
         }
-        if (is_array($firstFile[$key]) && is_array($secondFile[$key])) {
-            return setNode('array', $key, comparation($value1, $value2));
+        if (is_array($value1) && is_array($value2)) {
+            return setNode('array', $key, buildDiffTree($value1, $value2));
         }
-        if ($firstFile[$key] !== $secondFile[$key]) {
-            return setNode('changed', $key, setString($value1), setString($value2));
+        if ($value1 !== $value2) {
+            return setNode('changed', $key, setValue($value1), setValue($value2));
         }
         return setNode('unchanged', $key, $value1);
     }, $sortKey);
@@ -51,23 +62,27 @@ function setNode(string $status, string $key, mixed $value1, mixed $value2 = nul
     ];
 }
 
-
-function setString(mixed $data): mixed
+function setValue(mixed $data): mixed
 {
-    $iter = function ($data) use (&$iter) {
-        if (!is_array($data)) {
-            if (is_null($data)) {
-                return 'null';
-            }
-            return trim(var_export($data, true), "'");
-        }
+    if (!is_array($data)) {
+        return setString($data);
+    }
+    return setArray($data);
+}
 
-        $keys = array_keys($data);
-        return array_map(function ($key) use ($data, $iter) {
-            $value = (is_array($data[$key])) ? $iter($data[$key]) : $data[$key];
+function setString(mixed $data)
+{
+    if (is_null($data)) {
+        return 'null';
+    }
+    return trim(var_export($data, true), "'");
+}
+
+function setArray(array $data)
+{
+    $keys = array_keys($data);
+        return array_map(function ($key) use ($data) {
+            $value = (is_array($data[$key])) ? setValue($data[$key]) : $data[$key];
             return setNode('unchanged', $key, $value);
         }, $keys);
-    };
-
-    return $iter($data);
 }

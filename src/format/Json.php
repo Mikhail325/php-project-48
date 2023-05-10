@@ -1,8 +1,8 @@
 <?php
 
-namespace Formatters\Json;
+namespace Differ\Formatters\json;
 
-function getChangesInJson(array $astTree): string
+function render(array $tree): string
 {
-    return json_encode($astTree);
+    return json_encode($tree, JSON_THROW_ON_ERROR);
 }
