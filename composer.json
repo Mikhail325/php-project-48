@@ -23,7 +23,7 @@
     ],
     "license": "MIT",
     "bin": [
-        "bin/genDiff"
+        "bin/gendiff"
     ],
     "require": {
         "docopt/docopt": "^1.0",
