@@ -39,7 +39,7 @@ function processingNode(array $node, int $depth): string
 function indentation(int $depth, string $simbol = '')
 {
     $indent = str_repeat('    ', $depth);
-    if (!(!isset($simbol) || $simbol == false)) {
+    if ($simbol != false) {
         return $indent . "  {$simbol} ";
     }
     return $indent;
