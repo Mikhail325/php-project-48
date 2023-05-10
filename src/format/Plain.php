@@ -9,7 +9,7 @@ function render(array $astTree, string $wayValue = ''): string
     return implode("\n", $filterResult);
 }
 
-function processingNode($node, $wayValue)
+function processingNode(array $node, string $wayValue)
 {
     [
         'status' => $status,

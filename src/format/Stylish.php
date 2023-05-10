@@ -10,7 +10,7 @@ function render(array $astTree, int $depth = 0): string
     return implode("\n", $result);
 }
 
-function processingNode($node, $depth)
+function processingNode(array $node, int $depth): string
 {
     [
         'status' => $status,
@@ -45,7 +45,7 @@ function indentation(int $depth, string $simbol = '')
     return $indent;
 }
 
-function convertString($value, $depth)
+function convertString(mixed $value, int $depth)
 {
     if (is_array($value)) {
         return render($value, $depth + 1);
