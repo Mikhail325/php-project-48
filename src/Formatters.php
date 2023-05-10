@@ -5,9 +5,9 @@ namespace Differ\Formatters;
 function formatSelection(array $data, string $format): string
 {
     $corectFormate = ['stylish', 'plain', 'json'];
-
-    if (in_array($format, $corectFormate, false)) {
-        $render = "Differ\Formatters" . '\\' . $format . '\\' . 'render';
+    $render = "Differ\Formatters" . '\\' . $format . '\\' . 'render';
+    
+    if (in_array($format, $corectFormate, true)) {    
         return $render($data);
     }
 
