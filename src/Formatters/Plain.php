@@ -45,10 +45,13 @@ function getOutputValue(mixed $value): mixed
         if (
             $value === 'null' ||
             $value === 'true' ||
-            $value === 'false' ||
-            is_numeric($value)
+            $value === 'false'
         ) {
             return $value;
+        }
+
+        if (is_numeric($value)) {
+            return (string) $value;
         }
 
         return "'{$value}'";
