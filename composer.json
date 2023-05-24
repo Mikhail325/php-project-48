@@ -6,7 +6,6 @@
             "Hexlet\\Code\\": "src/"
         },
         "files":[
-            "src/Cli.php",
             "src/GenDiff.php",
             "src/Parsers.php",
             "src/Formatters.php",
