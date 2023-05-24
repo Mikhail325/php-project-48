@@ -1,8 +1,8 @@
 <?php
 
-namespace Differ\Formatters\stylish;
+namespace Differ\Formatters\Stylish;
 
-function render(array $astTree, int $depth = 0): string
+function renderStylish(array $astTree, int $depth = 0): string
 {
     $lines = array_map(fn ($node) => processingNode($node, $depth), $astTree);
     $indent = indentation($depth);
@@ -21,7 +21,7 @@ function processingNode(array $node, int $depth): string
 
     switch ($status) {
         case 'array':
-            return indentation($depth, ' ') . "{$key}: " . render($valueAfter, $depth + 1);
+            return indentation($depth, ' ') . "{$key}: " . renderStylish($valueAfter, $depth + 1);
         case 'unchanged':
             return indentation($depth, ' ') . "{$key}: " . convertString($valueAfter, $depth);
         case 'added':
@@ -48,7 +48,7 @@ function indentation(int $depth, string $simbol = '')
 function convertString(mixed $value, int $depth)
 {
     if (is_array($value)) {
-        return render($value, $depth + 1);
+        return renderStylish($value, $depth + 1);
     } else {
         return $value;
     }

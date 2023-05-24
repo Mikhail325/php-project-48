@@ -1,8 +1,8 @@
 <?php
 
-namespace Differ\Formatters\plain;
+namespace Differ\Formatters\Plain;
 
-function render(array $astTree, string $wayValue = ''): string
+function renderPlain(array $astTree, string $wayValue = ''): string
 {
     $result = array_map(fn ($node) => processingNode($node, $wayValue), $astTree);
     $filterResult = array_filter($result);
@@ -22,7 +22,7 @@ function processingNode(array $node, string $wayValue)
 
     switch ($status) {
         case 'array':
-            return render($valueAfter, $normalizeValue);
+            return renderPlain($valueAfter, $normalizeValue);
         case 'added':
             $after = getOutputValue($valueAfter);
             return "Property '{$normalizeValue}' was added with value: {$after}";
