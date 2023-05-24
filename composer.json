@@ -9,9 +9,9 @@
             "src/Differ.php",
             "src/Parsers.php",
             "src/Formatters.php",
-            "src/format/Stylish.php",
-            "src/format/Plain.php",
-            "src/format/Json.php"
+            "src/Formatters/Stylish.php",
+            "src/Formatters/Plain.php",
+            "src/Formatters/Json.php"
         ]
     },
     "authors": [
