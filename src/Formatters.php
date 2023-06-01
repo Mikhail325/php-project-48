@@ -2,9 +2,9 @@
 
 namespace Differ\Formatters;
 
-use function Differ\Formatters\Json\renderJson;
-use function Differ\Formatters\Plain\renderPlain;
-use function Differ\Formatters\Stylish\renderStylish;
+use function Differ\Formatters\Json\render as renderJson;
+use function Differ\Formatters\Plain\render as renderPlain;
+use function Differ\Formatters\Stylish\render as renderStylish;
 
 function formatSelection(array $data, string $format): string
 {

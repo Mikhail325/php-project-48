@@ -1,11 +1,11 @@
-install: #Запуск composer install
+install:
 	composer install
-validate: #Запуск composer install
+validate:
 	composer validate
-lint: #Запуск Линтера
+lint:
 	composer exec --verbose phpcs -- --standard=PSR12 src bin tests
 gendiff:
-	bin/gendiff file/file11.json file/file22.json
+	bin/gendiff $(file1) $(file2) 
 test:
 	composer exec --verbose phpunit tests
 test-coverage:

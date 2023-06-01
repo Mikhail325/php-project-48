@@ -2,7 +2,7 @@
 
 namespace Differ\Differ;
 
-use function Differ\Parsers\parset;
+use function Differ\Parsers\parse;
 use function Differ\Formatters\formatSelection;
 use function Functional\sort;
 
@@ -23,7 +23,7 @@ function parserData(string $file): array
     }
     $expansion = pathinfo($parsFile, PATHINFO_EXTENSION);
     $data = file_get_contents($parsFile);
-    return parset($data, $expansion);
+    return parse($data, $expansion);
 }
 
 function buildDiffTree(array $firstFile, array $secondFile): array
@@ -70,7 +70,7 @@ function setValue(mixed $data): mixed
     return setArray($data);
 }
 
-function setString(mixed $data)
+function setString(mixed $data): string
 {
     if (is_null($data)) {
         return 'null';
@@ -78,11 +78,11 @@ function setString(mixed $data)
     return trim(var_export($data, true), "'");
 }
 
-function setArray(array $data)
+function setArray(array $data): array
 {
     $keys = array_keys($data);
-        return array_map(function ($key) use ($data) {
-            $value = (is_array($data[$key])) ? setValue($data[$key]) : $data[$key];
-            return setNode('unchanged', $key, $value);
-        }, $keys);
+    return array_map(function ($key) use ($data) {
+        $value = is_array($data[$key]) ? setValue($data[$key]) : $data[$key];
+        return setNode('unchanged', $key, $value);
+    }, $keys);
 }

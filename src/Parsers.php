@@ -4,15 +4,15 @@ namespace Differ\Parsers;
 
 use Symfony\Component\Yaml\Yaml;
 
-function parset(mixed $data, string $expation): array
+function parse(mixed $data, string $formatName): array
 {
-    switch ($expation) {
+    switch ($formatName) {
         case 'json':
             return json_decode($data, true);
         case 'yaml':
         case 'yml':
             return Yaml::parse($data);
         default:
-            throw new \Exception("Unknown file format $expation");
+            throw new \Exception("Unknown file format $formatName");
     }
 }

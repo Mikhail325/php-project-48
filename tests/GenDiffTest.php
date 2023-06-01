@@ -10,7 +10,8 @@ class GenDiffTest extends TestCase
 {
     private function getPathFile(string $nameFile): string
     {
-        return 'file' . DIRECTORY_SEPARATOR . $nameFile;
+        return 'tests' . DIRECTORY_SEPARATOR . 'file'
+        . DIRECTORY_SEPARATOR . $nameFile;
     }
 
     private function getCorectAnswer(string $nameFile): string
@@ -21,27 +22,27 @@ class GenDiffTest extends TestCase
 
     public function testGenDiffStylish(): void
     {
-        $corectAneswe = file_get_contents($this->getCorectAnswer('corectStylish'));
+        $corectAneswer = file_get_contents($this->getCorectAnswer('corectStylish'));
         $this->assertEquals(
-            $corectAneswe,
+            $corectAneswer,
             genDiff($this->getPathFile('file11.json'), $this->getPathFile('file22.yml'))
         );
     }
 
     public function testGenDiffFormatPlain(): void
     {
-        $corectAneswe = file_get_contents($this->getCorectAnswer('corectPlain'));
+        $corectAneswer = file_get_contents($this->getCorectAnswer('corectPlain'));
         $this->assertEquals(
-            $corectAneswe,
+            $corectAneswer,
             genDiff($this->getPathFile('file11.json'), $this->getPathFile('file22.yml'), 'plain')
         );
     }
 
     public function testGenDiffFormatJson(): void
     {
-        $corectAneswe = file_get_contents($this->getCorectAnswer('corectJson'));
+        $corectAneswer = file_get_contents($this->getCorectAnswer('corectJson'));
         $this->assertEquals(
-            $corectAneswe,
+            $corectAneswer,
             genDiff($this->getPathFile('file11.json'), $this->getPathFile('file22.yml'), 'json')
         );
     }
