@@ -52,7 +52,7 @@ function buildDiffTree(array $firstFile, array $secondFile): array
     }, $sortKey);
 }
 
-function setNode(string $status, string $key, mixed $value1, mixed $value2 = null, $children = null): array
+function setNode(string $status, string $key, mixed $value1, mixed $value2 = null, array $children = null): array
 {
     return [
         'status' => $status,
