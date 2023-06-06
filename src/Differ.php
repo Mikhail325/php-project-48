@@ -43,7 +43,7 @@ function buildDiffTree(array $firstFile, array $secondFile): array
             return setNode('added', $key, setValue($value2));
         }
         if (is_array($value1) && is_array($value2)) {
-            return setNode('array', $key, buildDiffTree($value1, $value2));
+            return setNode('array', $key, null, null, buildDiffTree($value1, $value2));
         }
         if ($value1 !== $value2) {
             return setNode('changed', $key, setValue($value1), setValue($value2));
@@ -52,13 +52,14 @@ function buildDiffTree(array $firstFile, array $secondFile): array
     }, $sortKey);
 }
 
-function setNode(string $status, string $key, mixed $value1, mixed $value2 = null): array
+function setNode(string $status, string $key, mixed $value1, mixed $value2 = null, $children = null): array
 {
     return [
         'status' => $status,
         'key' => $key,
         'valueAfter' => $value1,
-        'valueBefore' => $value2
+        'valueBefore' => $value2,
+        'children' => $children
     ];
 }
 

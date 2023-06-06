@@ -16,12 +16,13 @@ function processingNode(array $node, int $depth): string
         'status' => $status,
         'key' => $key,
         'valueAfter' => $valueAfter,
-        'valueBefore' => $valueBefore
+        'valueBefore' => $valueBefore,
+        'children' => $children
     ] = $node;
 
     switch ($status) {
         case 'array':
-            return getIndent($depth, ' ') . $key . ": " . render($valueAfter, $depth + 1);
+            return getIndent($depth, ' ') . $key . ": " . render($children, $depth + 1);
         case 'unchanged':
             return getIndent($depth, ' ') . $key . ": " . convertString($valueAfter, $depth);
         case 'added':

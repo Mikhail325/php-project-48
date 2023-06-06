@@ -15,14 +15,15 @@ function processingNode(array $node, string $wayValue): mixed
         'status' => $status,
         'key' => $key,
         'valueAfter' => $valueAfter,
-        'valueBefore' => $valueBefore
+        'valueBefore' => $valueBefore,
+        'children' => $children
     ] = $node;
 
     $normalizeValue = ('' === $wayValue) ? $key : $wayValue . "." . $key;
 
     switch ($status) {
         case 'array':
-            return render($valueAfter, $normalizeValue);
+            return render($children, $normalizeValue);
         case 'added':
             $after = getOutputValue($valueAfter);
             return "Property '" . $normalizeValue . "' was added with value: " . $after;
