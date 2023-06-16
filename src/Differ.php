@@ -8,22 +8,22 @@ use function Functional\sort;
 
 function genDiff(string $firstFile, string $secondFile, string $formate = 'stylish'): string
 {
-    $file1 = parserData($firstFile);
-    $file2 = parserData($secondFile);
+    $file1 = parseData($firstFile);
+    $file2 = parseData($secondFile);
 
     $diff = buildDiffTree($file1, $file2);
     return formatSelection($diff, $formate);
 }
 
-function parserData(string $file): array
+function parseData(string $file): array
 {
-    $parsFile = realpath($file);
-    if ($parsFile === false) {
+    $filePath = realpath($file);
+    if ($filePath === false) {
         throw new \Exception("File not found");
     }
-    $expansion = pathinfo($parsFile, PATHINFO_EXTENSION);
-    $data = file_get_contents($parsFile);
-    return parse($data, $expansion);
+    $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+    $data = file_get_contents($filePath);
+    return parse($data, $extension);
 }
 
 function buildDiffTree(array $firstFile, array $secondFile): array
@@ -37,30 +37,40 @@ function buildDiffTree(array $firstFile, array $secondFile): array
         $value2 = $secondFile[$key] ?? null;
 
         if (!key_exists($key, $secondFile)) {
-            return setNode('deleted', $key, setValue($value1));
+            return [
+                'status' => 'deleted',
+                'key' => $key,
+                'valueAfter' => setValue($value1)
+            ];
         }
         if (!key_exists($key, $firstFile)) {
-            return setNode('added', $key, setValue($value2));
+            return [
+                'status' => 'added',
+                'key' => $key,
+                'valueAfter' => setValue($value2)
+            ];
         }
         if (is_array($value1) && is_array($value2)) {
-            return setNode('array', $key, null, null, buildDiffTree($value1, $value2));
+            return [
+                'status' => 'array',
+                'key' => $key,
+                'children' => buildDiffTree($value1, $value2)
+            ];
         }
         if ($value1 !== $value2) {
-            return setNode('changed', $key, setValue($value1), setValue($value2));
+            return [
+                'status' => 'changed',
+                'key' => $key,
+                'valueAfter' => setValue($value1),
+                'valueBefore' => setValue($value2)
+            ];
         }
-        return setNode('unchanged', $key, $value1);
+        return [
+            'status' => 'unchanged',
+            'key' => $key,
+            'valueAfter' => $value1
+        ];
     }, $sortKey);
-}
-
-function setNode(string $status, string $key, mixed $value1, mixed $value2 = null, array $children = null): array
-{
-    return [
-        'status' => $status,
-        'key' => $key,
-        'valueAfter' => $value1,
-        'valueBefore' => $value2,
-        'children' => $children
-    ];
 }
 
 function setValue(mixed $data): mixed
@@ -68,7 +78,7 @@ function setValue(mixed $data): mixed
     if (!is_array($data)) {
         return setString($data);
     }
-    return setArray($data);
+    return buildDiffTree($data, $data);
 }
 
 function setString(mixed $data): string
@@ -84,6 +94,10 @@ function setArray(array $data): array
     $keys = array_keys($data);
     return array_map(function ($key) use ($data) {
         $value = is_array($data[$key]) ? setValue($data[$key]) : $data[$key];
-        return setNode('unchanged', $key, $value);
+        return [
+            'status' => 'unchanged',
+            'key' => $key,
+            'valueAfter' => $value
+        ];
     }, $keys);
 }

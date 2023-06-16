@@ -5,34 +5,31 @@ namespace Differ\Formatters\Plain;
 function render(array $astTree, string $wayValue = ''): string
 {
     $result = array_map(fn ($node) => processingNode($node, $wayValue), $astTree);
-    $filterResult = array_filter($result);
-    return implode("\n", $filterResult);
+    $filteredResult = array_filter($result);
+    return implode("\n", $filteredResult);
 }
 
 function processingNode(array $node, string $wayValue): mixed
 {
     [
         'status' => $status,
-        'key' => $key,
-        'valueAfter' => $valueAfter,
-        'valueBefore' => $valueBefore,
-        'children' => $children
+        'key' => $key
     ] = $node;
 
-    $normalizeValue = ('' === $wayValue) ? $key : $wayValue . "." . $key;
+    $normalizedValue = ('' === $wayValue) ? $key : $wayValue . "." . $key;
 
     switch ($status) {
         case 'array':
-            return render($children, $normalizeValue);
+            return render($node['children'], $normalizedValue);
         case 'added':
-            $after = getOutputValue($valueAfter);
-            return "Property '" . $normalizeValue . "' was added with value: " . $after;
+            $after = getOutputValue($node['valueAfter']);
+            return "Property '" . $normalizedValue . "' was added with value: " . $after;
         case 'deleted':
-            return "Property '" . $normalizeValue . "' was removed";
+            return "Property '" . $normalizedValue . "' was removed";
         case 'changed':
-            $after = getOutputValue($valueAfter);
-            $before = getOutputValue($valueBefore);
-            return "Property '" . $normalizeValue . "' was updated. From " . $after . " to " . $before;
+            $after = getOutputValue($node['valueAfter']);
+            $before = getOutputValue($node['valueBefore']);
+            return "Property '" . $normalizedValue . "' was updated. From " . $after . " to " . $before;
         case 'unchanged':
             return '';
         default:

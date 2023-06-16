@@ -14,24 +14,21 @@ function processingNode(array $node, int $depth): string
 {
     [
         'status' => $status,
-        'key' => $key,
-        'valueAfter' => $valueAfter,
-        'valueBefore' => $valueBefore,
-        'children' => $children
+        'key' => $key
     ] = $node;
 
     switch ($status) {
         case 'array':
-            return getIndent($depth, ' ') . $key . ": " . render($children, $depth + 1);
+            return getIndent($depth, ' ') . $key . ": " . render($node['children'], $depth + 1);
         case 'unchanged':
-            return getIndent($depth, ' ') . $key . ": " . convertString($valueAfter, $depth);
+            return getIndent($depth, ' ') . $key . ": " . convertString($node['valueAfter'], $depth);
         case 'added':
-            return getIndent($depth, '+') . $key . ": " . convertString($valueAfter, $depth);
+            return getIndent($depth, '+') . $key . ": " . convertString($node['valueAfter'], $depth);
         case 'deleted':
-            return getIndent($depth, '-') . $key . ": " . convertString($valueAfter, $depth);
+            return getIndent($depth, '-') . $key . ": " . convertString($node['valueAfter'], $depth);
         case 'changed':
-            return getIndent($depth, '-') . $key . ": " . convertString($valueAfter, $depth) . "\n"
-            . getIndent($depth, '+') . $key . ": " . convertString($valueBefore, $depth);
+            return getIndent($depth, '-') . $key . ": " . convertString($node['valueAfter'], $depth) . "\n"
+            . getIndent($depth, '+') . $key . ": " . convertString($node['valueBefore'], $depth);
         default:
             throw new \Exception("Unknown status" . $status);
     }
