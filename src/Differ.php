@@ -59,7 +59,6 @@ function buildDiffTree(array $firstFile, array $secondFile): array
                 'valueAfter' => $correctValue2
             ];
         }
-        
         if ($correctValue1 !== $correctValue2) {
             return [
                 'status' => 'changed',
