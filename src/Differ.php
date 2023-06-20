@@ -88,4 +88,3 @@ function setString(mixed $data): string
     }
     return trim(var_export($data, true), "'");
 }
-
