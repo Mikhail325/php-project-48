@@ -57,7 +57,7 @@ function buildDiffTree(array $firstFile, array $secondFile): array
                 'children' => buildDiffTree($value1, $value2)
             ];
         }
-        if ($value1 !== $value2) {
+        if ($value1 != $value2) {
             return [
                 'status' => 'changed',
                 'key' => $key,
@@ -89,15 +89,3 @@ function setString(mixed $data): string
     return trim(var_export($data, true), "'");
 }
 
-function setArray(array $data): array
-{
-    $keys = array_keys($data);
-    return array_map(function ($key) use ($data) {
-        $value = is_array($data[$key]) ? setValue($data[$key]) : $data[$key];
-        return [
-            'status' => 'unchanged',
-            'key' => $key,
-            'valueAfter' => $value
-        ];
-    }, $keys);
-}
