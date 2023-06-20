@@ -36,20 +36,6 @@ function buildDiffTree(array $firstFile, array $secondFile): array
         $value1 = $firstFile[$key] ?? null;
         $value2 = $secondFile[$key] ?? null;
 
-        if (!key_exists($key, $secondFile)) {
-            return [
-                'status' => 'deleted',
-                'key' => $key,
-                'valueAfter' => setValue($value1)
-            ];
-        }
-        if (!key_exists($key, $firstFile)) {
-            return [
-                'status' => 'added',
-                'key' => $key,
-                'valueAfter' => setValue($value2)
-            ];
-        }
         if (is_array($value1) && is_array($value2)) {
             return [
                 'status' => 'array',
@@ -57,12 +43,29 @@ function buildDiffTree(array $firstFile, array $secondFile): array
                 'children' => buildDiffTree($value1, $value2)
             ];
         }
-        if ($value1 !== $value2) {
+        $correctValue1 = setValue($value1);
+        $correctValue2 = setValue($value2);
+        if (!key_exists($key, $secondFile)) {
+            return [
+                'status' => 'deleted',
+                'key' => $key,
+                'valueAfter' => $correctValue1
+            ];
+        }
+        if (!key_exists($key, $firstFile)) {
+            return [
+                'status' => 'added',
+                'key' => $key,
+                'valueAfter' => $correctValue2
+            ];
+        }
+        
+        if ($correctValue1 !== $correctValue2) {
             return [
                 'status' => 'changed',
                 'key' => $key,
-                'valueAfter' => setValue($value1),
-                'valueBefore' => setValue($value2)
+                'valueAfter' => $correctValue1,
+                'valueBefore' => $correctValue2
             ];
         }
         return [
