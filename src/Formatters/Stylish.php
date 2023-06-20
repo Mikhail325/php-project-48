@@ -43,7 +43,7 @@ function getIndent(int $depth, string $simbol = ''): string
     return $indent;
 }
 
-function convertString(mixed $value, int $depth): string
+function convertString(mixed $value, int $depth): mixed
 {
     if (is_array($value)) {
         return render($value, $depth + 1);
