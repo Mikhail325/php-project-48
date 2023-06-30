@@ -8,10 +8,10 @@ use function Functional\sort;
 
 function genDiff(string $firstFile, string $secondFile, string $formate = 'stylish'): string
 {
-    $file1 = parseData($firstFile);
-    $file2 = parseData($secondFile);
+    $data1 = parseData($firstFile);
+    $data2 = parseData($secondFile);
 
-    $diff = buildDiffTree($file1, $file2);
+    $diff = buildDiffTree($data1, $data2);
     return formatSelection($diff, $formate);
 }
 
@@ -26,51 +26,51 @@ function parseData(string $file): array
     return parse($data, $extension);
 }
 
-function buildDiffTree(array $firstFile, array $secondFile): array
+function buildDiffTree(array $firstData, array $secondData): array
 {
-    $keys = array_merge(array_keys($firstFile), array_keys($secondFile));
+    $keys = array_merge(array_keys($firstData), array_keys($secondData));
     $allKeys = array_values(array_unique($keys));
     $sortKey = sort($allKeys, fn($left, $right) => strcmp($left, $right));
-    return array_map(function ($key) use ($firstFile, $secondFile) {
+    return array_map(function ($key) use ($firstData, $secondData) {
 
-        $value1 = $firstFile[$key] ?? null;
-        $value2 = $secondFile[$key] ?? null;
+        $value1 = $firstData[$key] ?? null;
+        $value2 = $secondData[$key] ?? null;
 
         if (is_array($value1) && is_array($value2)) {
             return [
-                'status' => 'array',
+                'status' => 'nested',
                 'key' => $key,
                 'children' => buildDiffTree($value1, $value2)
             ];
         }
         $correctValue1 = setValue($value1);
         $correctValue2 = setValue($value2);
-        if (!key_exists($key, $secondFile)) {
+        if (!key_exists($key, $secondData)) {
             return [
                 'status' => 'deleted',
                 'key' => $key,
-                'valueAfter' => $correctValue1
+                'value1' => $correctValue1
             ];
         }
-        if (!key_exists($key, $firstFile)) {
+        if (!key_exists($key, $firstData)) {
             return [
                 'status' => 'added',
                 'key' => $key,
-                'valueAfter' => $correctValue2
+                'value1' => $correctValue2
             ];
         }
         if ($correctValue1 !== $correctValue2) {
             return [
                 'status' => 'changed',
                 'key' => $key,
-                'valueAfter' => $correctValue1,
-                'valueBefore' => $correctValue2
+                'value1' => $correctValue1,
+                'value2' => $correctValue2
             ];
         }
         return [
             'status' => 'unchanged',
             'key' => $key,
-            'valueAfter' => $value1
+            'value1' => $value1
         ];
     }, $sortKey);
 }

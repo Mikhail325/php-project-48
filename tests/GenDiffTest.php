@@ -8,42 +8,30 @@ use function Differ\Differ\genDiff;
 
 class GenDiffTest extends TestCase
 {
-    private function getPathFile(string $nameFile): string
+    private function getFile(string $nameFile): string
     {
-        return 'tests' . DIRECTORY_SEPARATOR . 'file'
-        . DIRECTORY_SEPARATOR . $nameFile;
+        return realpath(implode('/', ['tests', 'fixtures', $nameFile]));
     }
 
-    private function getCorectAnswer(string $nameFile): string
-    {
-        return 'tests' . DIRECTORY_SEPARATOR . 'fixtures'
-        . DIRECTORY_SEPARATOR . $nameFile;
-    }
+    /**
+     * @dataProvider dataTest
+     */
 
-    public function testGenDiffStylish(): void
+    public function testGenDiff($file1, $file2, $corectFile, $format): void
     {
-        $corectAneswer = file_get_contents($this->getCorectAnswer('corectStylish'));
+        $corectAneswer = file_get_contents($this->getFile($corectFile));
         $this->assertEquals(
             $corectAneswer,
-            genDiff($this->getPathFile('file11.json'), $this->getPathFile('file22.yml'))
+            genDiff($this->getFile($file1), $this->getFile($file2), $format)
         );
     }
 
-    public function testGenDiffFormatPlain(): void
+    public static function dataTest()
     {
-        $corectAneswer = file_get_contents($this->getCorectAnswer('corectPlain'));
-        $this->assertEquals(
-            $corectAneswer,
-            genDiff($this->getPathFile('file11.json'), $this->getPathFile('file22.yml'), 'plain')
-        );
-    }
-
-    public function testGenDiffFormatJson(): void
-    {
-        $corectAneswer = file_get_contents($this->getCorectAnswer('corectJson'));
-        $this->assertEquals(
-            $corectAneswer,
-            genDiff($this->getPathFile('file11.json'), $this->getPathFile('file22.yml'), 'json')
-        );
+        return [
+            'testStylish'  => ['file11.json', 'file22.yml', 'corectStylish', 'stylish'],
+            'testPlain' => ['file11.json', 'file22.yml', 'corectPlain', 'plain'],
+            'testJson' => ['file11.json', 'file22.yml', 'corectJson', 'json']
+        ];
     }
 }

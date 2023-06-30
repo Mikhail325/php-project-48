@@ -4,12 +4,12 @@ namespace Differ\Formatters\Plain;
 
 function render(array $astTree, string $wayValue = ''): string
 {
-    $result = array_map(fn ($node) => processingNode($node, $wayValue), $astTree);
+    $result = array_map(fn ($node) => processNode($node, $wayValue), $astTree);
     $filteredResult = array_filter($result);
     return implode("\n", $filteredResult);
 }
 
-function processingNode(array $node, string $wayValue): mixed
+function processNode(array $node, string $wayValue): mixed
 {
     [
         'status' => $status,
@@ -19,16 +19,16 @@ function processingNode(array $node, string $wayValue): mixed
     $normalizedValue = ('' === $wayValue) ? $key : $wayValue . "." . $key;
 
     switch ($status) {
-        case 'array':
+        case 'nested':
             return render($node['children'], $normalizedValue);
         case 'added':
-            $after = getOutputValue($node['valueAfter']);
+            $after = getOutputValue($node['value1']);
             return "Property '" . $normalizedValue . "' was added with value: " . $after;
         case 'deleted':
             return "Property '" . $normalizedValue . "' was removed";
         case 'changed':
-            $after = getOutputValue($node['valueAfter']);
-            $before = getOutputValue($node['valueBefore']);
+            $after = getOutputValue($node['value1']);
+            $before = getOutputValue($node['value2']);
             return "Property '" . $normalizedValue . "' was updated. From " . $after . " to " . $before;
         case 'unchanged':
             return '';
